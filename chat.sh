@@ -165,7 +165,7 @@ main() {
 
     chmod 600 .env
 
-    echo -e "${GREEN}🎉 Project is ready! Run 'python3 chat.py' to start.${NC}"
+    echo -e "${GREEN}🎉 Project is ready! Run 'python3 chat.py(linux, mac) or python chat.py(windows)' to start.${NC}"
 }
 
 main
