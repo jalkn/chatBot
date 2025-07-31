@@ -1,0 +1,7 @@
+*.pyc
+__pycache__
+.venv
+.env
+.vscode
+.DS_store}
+cards.py
