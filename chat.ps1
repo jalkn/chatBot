@@ -19,7 +19,7 @@ function chatBot {
     # Create templates directory structure
     $directories = @(
         "chat",
-        "chat/history",
+        "chat/historial",
         "chat/results"
     )
     foreach ($dir in $directories) {
@@ -27,12 +27,12 @@ function chatBot {
     }
 
 # Create .env with API KEY
-Set-Content -Path ".env" -Value @" 
-GOOGLE_API_KEY=""
-"@
+#t-Content -Path ".env" -Value @" 
+#GOOGLE_API_KEY=""
+#"@
 
 # Create example.py
-Set-Content -Path "chat/example.py" -Value @"
+Set-Content -Path "chat/message.py" -Value @"
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 import os
@@ -49,6 +49,36 @@ chat_model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api
 
 result = chat_model.predict("hi!")
 print(result)
+"@
+
+# Create mulTexample.py
+Set-Content -Path "chat/mulTessages.py" -Value @"
+from langchain_google_genai import ChatGoogleGenerativeAI
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+api_key = os.getenv("GOOGLE_API_KEY")
+
+if not api_key:
+    raise ValueError("GOOGLE_API_KEY environment variable not set.")
+
+chat_model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=api_key)
+
+print("Chatbot started! Type 'exit' to quit.")
+
+while True:
+    user_message = input("You: ")
+    if user_message.lower() == 'exit':
+        print("Exiting chat.")
+        break
+    
+    try:
+        result = chat_model.predict(user_message)
+        print(f"Bot: {result}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 "@
 
 

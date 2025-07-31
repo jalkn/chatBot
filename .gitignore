@@ -4,5 +4,4 @@ __pycache__
 .env
 .vscode
 .DS_store}
-chain.py
-example.py
+chat/
