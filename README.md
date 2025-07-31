@@ -32,7 +32,7 @@ Sigue estos pasos para configurar el proyecto:
 
 ```
 
-git clone \<URL\_DEL\_REPOSITORIO\>
+git clone https://github.com/jalkn/chatBot.git
 
 ```
 
@@ -106,9 +106,4 @@ En ambos casos, el programa te pedirá que escribas un "Tema de Auditoría" y re
       ├── prompTemplate.py     \# Definición de la plantilla de prompt del auditor
       └── structureOutput.py   \# Aplicación de chat con salida estructurada (recomendado)
 
-```
-
-## Contribución
-
-Si deseas contribuir a este proyecto, no dudes en abrir un *issue* o enviar un *pull request*.
 ```
