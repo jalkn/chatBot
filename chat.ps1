@@ -5,18 +5,17 @@ function chatBot {
 
     $YELLOW = [ConsoleColor]::Yellow
 
-    Write-Host "🚀 Creating LangChain framework" -ForegroundColor $YELLOW
+    Write-Host "🚀 Creando el framework de LangChain" -ForegroundColor $YELLOW
 
-    # Create Python virtual environment
+    # Crear entorno virtual de Python
     python -m venv .venv
     .\.venv\scripts\activate
 
-    # Install required Python packages
+    # Instalar paquetes de Python requeridos
     python.exe -m pip install --upgrade pip
-    python -m pip install langchain-google-genai python-dotenv
+    python -m pip install langchain-google-genai python-dotenv pydantic
 
-
-    # Create templates directory structure
+    # Crear la estructura del directorio de plantillas
     $directories = @(
         "chat",
         "chat/historial"
@@ -25,12 +24,12 @@ function chatBot {
         New-Item -Path $dir -ItemType Directory -Force
     }
 
-# Create .env with API KEY
-#t-Content -Path ".env" -Value @" 
+# Crear .env con la CLAVE API
+#Set-Content -Path ".env" -Value @" 
 #GOOGLE_API_KEY=""
 #"@
 
-# Create example.py
+# Crear message.py
 Set-Content -Path "chat/message.py" -Value @"
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
@@ -41,16 +40,16 @@ load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 
 if not api_key:
-    raise ValueError("GOOGLE_API_KEY environment variable not set.")
+    raise ValueError("No se ha establecido la variable de entorno GOOGLE_API_KEY.")
 
-# Check the Google AI documentation for the latest available models.
+# Comprobar la documentación de Google AI para los últimos modelos disponibles.
 chat_model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api_key)
 
-result = chat_model.predict("hi!")
+result = chat_model.predict("¡hola!")
 print(result)
 "@
 
-# Create mulTexample.py
+# Crear mulTessages.py
 Set-Content -Path "chat/mulTessages.py" -Value @"
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
@@ -61,64 +60,66 @@ load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 
 if not api_key:
-    raise ValueError("GOOGLE_API_KEY environment variable not set.")
+    raise ValueError("No se ha establecido la variable de entorno GOOGLE_API_KEY.")
 
 chat_model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=api_key)
 
-print("Chatbot started! Type 'exit' to quit.")
+print("¡Chatbot iniciado! Escribe 'exit' para salir.")
 
 while True:
-    user_message = input("You: ")
+    user_message = input("Tú: ")
     if user_message.lower() == 'exit':
-        print("Exiting chat.")
+        print("Saliendo del chat.")
         break
     
     try:
         result = chat_model.predict(user_message)
         print(f"Bot: {result}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Ocurrió un error: {e}")
 "@
 
-
-# Create prompTemplate.py
+# Crear prompTemplate.py
 Set-Content -Path "chat/prompTemplate.py" -Value @"
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import SystemMessage, HumanMessage
 
 def get_auditor_prompt_template():
     """
-    Creates and returns a LangChain ChatPromptTemplate for a business auditor.
+    Crea y devuelve una ChatPromptTemplate de LangChain para un auditor de negocios.
 
-    The template defines the persona of the AI, the context of the audit,
-    and placeholders for dynamic user questions.
+    La plantilla define la persona de la IA, el contexto de la auditoría,
+    y los marcadores de posición para las preguntas dinámicas del usuario.
     """
-    # It instructs the model on its role, responsibilities, and tone.
+    # El mensaje del sistema establece el escenario y define la persona de la IA.
+    # Instruye al modelo sobre su rol, responsabilidades y tono.
     system_message = """
-    You are an experienced and meticulous business auditor. Your role is to ask
-    incisive, detailed questions to assess a company's financial health, operational
-    efficiency, compliance, and strategic outlook.
+    Eres un auditor de negocios experimentado y meticuloso. Tu función es hacer
+    preguntas incisivas y detalladas para evaluar la salud financiera, la eficiencia
+    operativa, el cumplimiento y las perspectivas estratégicas de una empresa.
 
-    Your questions should be structured, clear, and designed to uncover potential
-    risks, weaknesses, and opportunities for improvement.
+    Tus preguntas deben ser estructuradas, claras y diseñadas para descubrir posibles
+    riesgos, debilidades y oportunidades de mejora.
     
-    Maintain a professional, objective, and analytical tone.
+    Mantén un tono profesional, objetivo y analítico.
     
-    The areas you will focus on include:
-    1. Financials: Revenue, expenses, profitability, cash flow, debt.
-    2. Operations: Supply chain, production processes, efficiency, quality control.
-    3. Compliance & Governance: Regulatory adherence, internal controls, corporate governance.
-    4. Market & Strategy: Competitive landscape, growth strategy, market positioning.
+    Las áreas en las que te centrarás incluyen:
+    1. Finanzas: Ingresos, gastos, rentabilidad, flujo de caja, deuda.
+    2. Operaciones: Cadena de suministro, procesos de producción, eficiencia, control de calidad.
+    3. Cumplimiento y Gobierno: Adherencia regulatoria, controles internos, gobierno corporativo.
+    4. Mercado y Estrategia: Panorama competitivo, estrategia de crecimiento, posicionamiento en el mercado.
     
-    Provide your questions in a clear, bullet-point format.
+    Proporciona tus preguntas en un formato claro de viñetas.
     """
     
-    # It allows the user to specify a topic for the questions.
+    # El mensaje humano contiene la parte dinámica del prompt.
+    # Permite al usuario especificar un tema para las preguntas.
     human_message = """
-    Generate a list of key audit questions for the topic: {topic}.
+    Genera una lista de preguntas de auditoría clave para el tema: {topic}.
     """
 
-    # This is a key component of LangChain for creating conversational prompts.
+    # Combina los mensajes en una ChatPromptTemplate.
+    # Este es un componente clave de LangChain para crear prompts conversacionales.
     chat_prompt_template = ChatPromptTemplate.from_messages([
         SystemMessage(content=system_message),
         HumanMessage(content=human_message)
@@ -127,56 +128,162 @@ def get_auditor_prompt_template():
     return chat_prompt_template
 "@
 
-# Create chat.py
+# Crear chat.py
 Set-Content -Path "chat/chat.py" -Value @"
-# chat_app.py
-
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 import os
 from prompTemplate import get_auditor_prompt_template  
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 
-# Load environment variables from the .env file
+# Cargar variables de entorno del archivo .env
 load_dotenv()
 
-# Get the API key
+# Obtener la clave API
 api_key = os.getenv("GOOGLE_API_KEY")
 
-# Check if the API key is set
+# Comprobar si se ha establecido la clave API
 if not api_key:
-    raise ValueError("GOOGLE_API_KEY environment variable not set.")
+    raise ValueError("No se ha establecido la variable de entorno GOOGLE_API_KEY.")
 
-# Initialize the chat model with the Gemini 1.5 Flash model
+# Inicializar el modelo de chat con el modelo Gemini 1.5 Flash
 chat_model = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api_key)
 
-# Get the pre-defined auditor prompt template
+# Obtener la plantilla de prompt del auditor predefinida
 auditor_prompt_template = get_auditor_prompt_template()
 
-print("Business Auditor Chatbot started!")
-print("Type a topic for audit questions (e.g., Financials, Compliance).")
-print("Type 'exit' to quit the chat.")
+# Crear una cadena del Lenguaje de Expresión de LangChain (LCEL)
+# Esto asegura que la entrada del usuario se procese correctamente
+# y se pase al modelo.
+chain = (
+    {"topic": RunnablePassthrough()}
+    | auditor_prompt_template
+    | chat_model
+    | StrOutputParser()
+)
 
-# Start the chat loop
+print("¡El chatbot de auditoría de negocios ha comenzado!")
+print("Escribe un tema para las preguntas de auditoría (por ejemplo, 'Finanzas', 'Cumplimiento').")
+print("Escribe 'exit' para salir del chat.")
+
+# Iniciar el bucle de chat
 while True:
-    user_topic = input("Auditor Topic: ")
+    user_topic = input("Tema de Auditoría: ")
     
-    # Check for the exit command
+    # Comprobar el comando de salida
     if user_topic.lower() == 'exit':
-        print("Exiting chat.")
+        print("Saliendo del chat.")
         break
     
-    # This combines the system message and the human message with the topic
-    formatted_prompt = auditor_prompt_template.format_prompt(topic=user_topic)
-    
     try:
-        # The .invoke() method sends the prompt to the LLM and gets the response
-        result = chat_model.invoke(formatted_prompt)
+        # Invocar la cadena con el tema del usuario
+        result = chain.invoke(user_topic)
         
-        # Print the LLM's response content
-        print(f"\nAudit Questions:\n{result.content}\n")
+        # Imprimir el contenido de la respuesta del LLM
+        print(f"\nPreguntas de Auditoría:\n{result}\n")
         
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Ocurrió un error: {e}")
+"@
+
+# Crear structureOutput.py
+Set-Content -Path "chat/structureOutput.py" -Value @"
+# chat_with_structured_output.py
+
+from langchain_google_genai import ChatGoogleGenerativeAI
+from dotenv import load_dotenv
+import os
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, Field
+from typing import List
+
+# Cargar variables de entorno del archivo .env
+load_dotenv()
+
+# Obtener la clave API
+api_key = os.getenv("GOOGLE_API_KEY")
+
+# Comprobar si se ha establecido la clave API
+if not api_key:
+    raise ValueError("No se ha establecido la variable de entorno GOOGLE_API_KEY.")
+
+# --- Definir la estructura de salida deseada usando Pydantic ---
+class AuditQuestions(BaseModel):
+    """Una lista de preguntas de auditoría."""
+    questions: List[str] = Field(description="Una lista de preguntas de auditoría detalladas.")
+
+# Inicializar el PydanticOutputParser con el modelo Pydantic
+parser = PydanticOutputParser(pydantic_object=AuditQuestions)
+
+# --- Crear la plantilla de prompt con instrucciones de formato en español ---
+# El mensaje del sistema se actualiza para ser más explícito sobre la salida esperada,
+# y ahora está en español.
+system_message = f"""
+Eres un auditor de negocios experimentado y meticuloso. Tu función es hacer
+preguntas incisivas y detalladas para evaluar la salud financiera, la eficiencia
+operativa, el cumplimiento y las perspectivas estratégicas de una empresa.
+
+Tus preguntas deben ser estructuradas, claras y diseñadas para descubrir posibles
+riesgos, debilidades y oportunidades de mejora.
+
+Tu ÚNICA tarea es generar una respuesta en formato JSON. NO incluyas ningún texto conversacional.
+
+{parser.get_format_instructions()}
+"""
+
+human_message = """
+Genera una lista de preguntas de auditoría clave para el tema: {topic}.
+"""
+
+# Combinar los mensajes en una ChatPromptTemplate.
+auditor_prompt_template = ChatPromptTemplate.from_messages([
+    SystemMessage(content=system_message),
+    HumanMessage(content=human_message)
+])
+
+# Inicializar el modelo de chat
+chat_model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=api_key)
+
+# --- Crear la cadena del Lenguaje de Expresión de LangChain (LCEL) ---
+# La cadena ahora incluye el analizador como el paso final, asegurando que la salida
+# sea un objeto Pydantic.
+chain = (
+    {"topic": RunnablePassthrough()}
+    | auditor_prompt_template
+    | chat_model
+    | parser
+)
+
+# Las cadenas orientadas al usuario también se traducen al español
+print("¡El chatbot de auditoría de negocios ha comenzado!")
+print("Escribe un tema para las preguntas de auditoría (por ejemplo, 'Finanzas', 'Cumplimiento').")
+print("Escribe 'exit' para salir del chat.")
+
+# Iniciar el bucle de chat
+while True:
+    user_topic = input("Tema de Auditoría: ")
+    
+    # Comprobar el comando de salida
+    if user_topic.lower() == 'exit':
+        print("Saliendo del chat.")
+        break
+    
+    try:
+        # Invocar la cadena con el tema del usuario
+        result = chain.invoke(user_topic)
+        
+        # El resultado es ahora un objeto Pydantic, al que podemos acceder fácilmente.
+        print("\nPreguntas de Auditoría:")
+        for question in result.questions:
+            print(f"- {question}")
+        print("\n")
+        
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
 "@
 }
 
