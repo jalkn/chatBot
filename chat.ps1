@@ -29,6 +29,38 @@ function chatBot {
 #GOOGLE_API_KEY=""
 #"@
 
+# Crear requirements 
+Set-Content -Path "requirements.txt" -Value @" 
+langchain-google-genai
+python-dotenv
+pydantic
+langchain-core
+"@
+
+# Crear .env con la CLAVE API
+Set-Content -Path "dockerfile" -Value @" 
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim-buster
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file into the container at /app
+COPY requirements.txt .
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the chat directory and its contents into the container at /app/chat
+COPY chat chat/
+
+# Create an empty .env file inside the container
+RUN touch .env
+
+# Set the entry point to run the desired Python script
+CMD ["python", "chat/structureOutput.py"]
+#"@
+
 # Crear message.py
 Set-Content -Path "chat/message.py" -Value @"
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -288,3 +320,7 @@ while True:
 }
 
 chatBot
+
+docker build -t chatbot-app .
+docker run -it --rm -e GOOGLE_API_KEY="YOUR_API_KEY_HERE" chatbot-app
+docker run -it --rm -e GOOGLE_API_KEY="YOUR_API_KEY_HERE" chatbot-app python chat/structureOutput.py

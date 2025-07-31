@@ -96,6 +96,8 @@ En ambos casos, el programa te pedirá que escribas un "Tema de Auditoría" y re
 
 /
 ├── .venv/                   \# Entorno virtual de Python
+├── Dockerfile                   \# Entorno virtual de Python
+├── requirements.txt                  \# Entorno virtual de Python
 ├── chat.ps1                 \# Script principal de configuración en PowerShell
 ├── .env                     \# Archivo para la clave API (debes crearlo o descomentar las líneas en chat.ps1)
 └── chat/
