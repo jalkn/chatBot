@@ -37,29 +37,29 @@ pydantic
 langchain-core
 "@
 
-# Crear .env con la CLAVE API
+# Crear dockerfile
 Set-Content -Path "dockerfile" -Value @" 
-# Use an official Python runtime as a parent image
+# Usar una imagen base oficial de Python
 FROM python:3.9-slim-buster
 
-# Set the working directory in the container
+# Establecer el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copy the requirements file into the container at /app
+# Copiar el archivo requirements.txt al contenedor en /app
 COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
+# Instalar cualquier paquete necesario especificado en requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the chat directory and its contents into the container at /app/chat
+# Copiar el directorio chat y su contenido al contenedor en /app/chat
 COPY chat chat/
 
-# Create an empty .env file inside the container
+# Crear un archivo .env vacío dentro del contenedor
 RUN touch .env
 
-# Set the entry point to run the desired Python script
+# Establecer el punto de entrada para ejecutar el script de Python deseado
 CMD ["python", "chat/structureOutput.py"]
-#"@
+"@
 
 # Crear message.py
 Set-Content -Path "chat/message.py" -Value @"
