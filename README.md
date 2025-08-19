@@ -52,7 +52,10 @@ Descomenta las líneas en `chat.ps1` que crean el archivo `.env` o crea manualme
 
 ```
 
-GOOGLE_API_KEY="TU_CLAVE_API_AQUÍ"
+# Crear .env con la CLAVE API
+#Set-Content -Path ".env" -Value @" 
+#GOOGLE_API_KEY="TU_CLAVE_API_AQUÍ"
+#"@
 
 ```
 

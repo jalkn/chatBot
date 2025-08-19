@@ -24,6 +24,11 @@ function chatBot {
         New-Item -Path $dir -ItemType Directory -Force
     }
 
+# Crear .env con la CLAVE API
+#Set-Content -Path ".env" -Value @" 
+#GOOGLE_API_KEY=""
+#"@
+
 # Crear requirements 
 Set-Content -Path "requirements.txt" -Value @" 
 langchain-google-genai
