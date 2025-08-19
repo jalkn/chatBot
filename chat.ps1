@@ -24,11 +24,6 @@ function chatBot {
         New-Item -Path $dir -ItemType Directory -Force
     }
 
-# Crear .env con la CLAVE API
-#Set-Content -Path ".env" -Value @" 
-#GOOGLE_API_KEY=""
-#"@
-
 # Crear requirements 
 Set-Content -Path "requirements.txt" -Value @" 
 langchain-google-genai
@@ -322,5 +317,5 @@ while True:
 chatBot
 
 docker build -t chatbot-app .
-docker run -it --rm -e GOOGLE_API_KEY="YOUR_API_KEY_HERE" chatbot-app
-docker run -it --rm -e GOOGLE_API_KEY="YOUR_API_KEY_HERE" chatbot-app python chat/structureOutput.py
+docker run -it --rm -e GOOGLE_API_KEY="GOOGLE_API_KEY" chatbot-app
+docker run -it --rm -e GOOGLE_API_KEY="GOOGLE_API_KEY" chatbot-app python chat/structureOutput.py

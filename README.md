@@ -28,7 +28,7 @@ Asegúrate de tener instalado lo siguiente en tu sistema:
 
 Sigue estos pasos para configurar el proyecto:
 
-1. **Clonar el repositorio** (si aún no lo has hecho):
+1. **Clonar el repositorio**:
 
 ```
 
@@ -52,7 +52,7 @@ Descomenta las líneas en `chat.ps1` que crean el archivo `.env` o crea manualme
 
 ```
 
-GOOGLE\_API\_KEY="TU\_CLAVE\_API\_AQUÍ"
+GOOGLE_API_KEY="TU_CLAVE_API_AQUÍ"
 
 ```
 
@@ -109,3 +109,11 @@ En ambos casos, el programa te pedirá que escribas un "Tema de Auditoría" y re
       └── structureOutput.py   \# Aplicación de chat con salida estructurada (recomendado)
 
 ```
+
+## Ejemplo de Uso
+
+## Ejemplo de Uso
+
+Aquí tienes una captura de pantalla del chatbot en acción, generando preguntas de auditoría para el tema "Finanzas".
+
+![Captura de pantalla del chatbot de auditoría](example.png)
